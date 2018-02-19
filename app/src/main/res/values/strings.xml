@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">HCF Inventory App</string>
+
+    <!-- AddItemUIS -->
+    <string name="form_inventory_number">Inventory number</string>
+    <string name="form_item_name">Item name</string>
+    <string name="form_item_amount">Amount</string>
+    <string name="form_item_location">Location</string>
+    <string name="form_item_ean">EAN</string>
+    <string name="add_item">Add item</string>
+    <string name="error_not_empty">This field must not be empty</string>
+    <string name="error_min_zero">This value must not be negative</string>
+    <string name="error_no_ean">This value is no EAN</string>
+</resources>
