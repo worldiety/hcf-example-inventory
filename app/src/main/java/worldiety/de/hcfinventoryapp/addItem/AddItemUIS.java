@@ -88,7 +88,6 @@ public class AddItemUIS extends FrameLayout {
             }
 
             if (otherFieldSpecificErrorsBuilder != null) {
-                //TODO test this with 0.0.62
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setMessage(otherFieldSpecificErrorsBuilder.toString());
                 builder.create().show();

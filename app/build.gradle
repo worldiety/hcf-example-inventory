@@ -25,7 +25,7 @@ android {
 
 dependencies {
     //hcf environment
-    compile 'org.homunculusframework:hcf-android-bootstrap:0.0.61'
+    compile 'org.homunculusframework:hcf-android-bootstrap:0.0.63'
 
     compile 'com.android.support:design:26.1.0'
 
