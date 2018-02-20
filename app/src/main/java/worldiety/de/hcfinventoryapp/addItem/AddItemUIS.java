@@ -32,6 +32,8 @@ import worldiety.de.hcfinventoryapp.addItem.model.InventoryItem;
 public class AddItemUIS extends FrameLayout {
 
     public final static String NAME = "addItem";
+    public final static String PARAMETER_VIEWMODEL = "viewModel";
+    public final static String PARAMETER_ERRORS = "errors";
 
     @Inject
     private Activity activity;
@@ -40,11 +42,11 @@ public class AddItemUIS extends FrameLayout {
     Navigation navigation;
 
     @Inject
-    @Named("viewModel")
+    @Named(PARAMETER_VIEWMODEL)
     private InventoryItem viewModel;
 
     @Inject
-    @Named("errors")
+    @Named(PARAMETER_ERRORS)
     private BindingResult<InventoryItem> errors;
 
     @Inject
@@ -56,26 +58,33 @@ public class AddItemUIS extends FrameLayout {
 
     @PostConstruct
     private void apply() {
+        //load layout and set this as content View
         activity.setContentView(this);
         View layout = LayoutInflater.from(getContext()).inflate(R.layout.uis_add_item, null);
         addView(layout);
 
+        //Initialize model to validate the View with
         if (viewModel == null) {
             viewModel = new InventoryItem();
         }
 
+        //Fill the View with values from the model
         modelViewPopulator.populateView(viewModel, layout);
 
+        //Errors came back from the controller, so we need to handle them
         if (errors != null) {
+            //Insert errors from the validator into the view
             BindingResult<InventoryItem> errorResult = modelViewPopulator.insertErrorState(layout, errors);
+            //Handle errors, which are specific to a field, but cannot be mapped to a View
             for (FieldSpecificValidationError<InventoryItem> error : errorResult.getFieldSpecificValidationErrors()) {
                 //TODO handle errors, which cannot be assigned to a View
                 LoggerFactory.getLogger(this.getClass()).error("Handle me! I'm a constraint error!: " + error.getField() + ", " + error.getObjectName() + ", " + error.getRejectedValue() + ", " + error.getDefaultMessage());
 
             }
 
+            //Handle other errors
             for (UnspecificValidationError error : errorResult.getUnspecificValidationErrors()) {
-                //TODO handle custom errors
+                //TODO handle UnspecificValidationErrors
                 LoggerFactory.getLogger(this.getClass()).error("Handle me! I'm a custom error!: " + error.getMessage() + ", " + error.getException());
 
             }
@@ -83,7 +92,9 @@ public class AddItemUIS extends FrameLayout {
 
         Button buttonAdd = layout.findViewById(R.id.bt_add_item);
         buttonAdd.setOnClickListener(v -> {
+            //Fill the model with values from the View
             modelViewPopulator.populateBean(layout, viewModel);
+            //Send the model to the controller
             navigation.forward(new Request(AddItemController.NAME + AddItemController.REQUEST_SAVE).put("entity", viewModel));
         });
     }

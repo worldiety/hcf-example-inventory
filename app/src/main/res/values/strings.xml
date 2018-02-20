@@ -11,4 +11,5 @@
     <string name="error_not_empty">This field must not be empty</string>
     <string name="error_min_zero">This value must not be negative</string>
     <string name="error_no_ean">This value is no EAN</string>
+    <string name="error_could_not_save_to_database">Could not save to database</string>
 </resources>
