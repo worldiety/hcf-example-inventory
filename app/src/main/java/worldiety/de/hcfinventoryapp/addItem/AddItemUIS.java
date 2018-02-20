@@ -73,6 +73,8 @@ public class AddItemUIS extends FrameLayout {
 
         //Errors came back from the controller, so we need to handle them
         if (errors != null) {
+            //Correct navigation stack here. Otherwise the back button will lead here multiple times
+            navigation.pop();
             //Insert errors from the validator into the view
             BindingResult<InventoryItem> errorResult = modelViewPopulator.insertErrorState(layout, errors);
 
