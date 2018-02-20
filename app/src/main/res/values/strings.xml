@@ -12,4 +12,6 @@
     <string name="error_min_zero">This value must not be negative</string>
     <string name="error_no_ean">This value is no EAN</string>
     <string name="error_could_not_save_to_database">Could not save to database</string>
+    <string name="error_field_specific_but_no_view">"An error occurred in field %1$s from Object %2$s: %3$s"
+    </string>
 </resources>

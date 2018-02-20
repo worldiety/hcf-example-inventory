@@ -1,6 +1,7 @@
 package worldiety.de.hcfinventoryapp.addItem;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import org.homunculus.android.component.module.validator.FieldSpecificValidation
 import org.homunculus.android.component.module.validator.UnspecificValidationError;
 import org.homunculusframework.factory.container.Request;
 import org.homunculusframework.navigation.Navigation;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -75,17 +75,27 @@ public class AddItemUIS extends FrameLayout {
         if (errors != null) {
             //Insert errors from the validator into the view
             BindingResult<InventoryItem> errorResult = modelViewPopulator.insertErrorState(layout, errors);
-            //Handle errors, which are specific to a field, but cannot be mapped to a View
-            for (FieldSpecificValidationError<InventoryItem> error : errorResult.getFieldSpecificValidationErrors()) {
-                //TODO handle errors, which cannot be assigned to a View
-                LoggerFactory.getLogger(this.getClass()).error("Handle me! I'm a constraint error!: " + error.getField() + ", " + error.getObjectName() + ", " + error.getRejectedValue() + ", " + error.getDefaultMessage());
 
+            //Handle errors, which are specific to a field, but cannot be mapped to a View
+            StringBuilder otherFieldSpecificErrorsBuilder = null;
+            for (FieldSpecificValidationError<InventoryItem> error : errorResult.getFieldSpecificValidationErrors()) {
+                if (otherFieldSpecificErrorsBuilder == null)
+                    otherFieldSpecificErrorsBuilder = new StringBuilder();
+
+                otherFieldSpecificErrorsBuilder.append(getContext().getString(R.string.error_field_specific_but_no_view, error.getField(), error.getObjectName(), error.getDefaultMessage())).append("\n");
+            }
+
+            if (otherFieldSpecificErrorsBuilder != null) {
+                //TODO test this with 0.0.62
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage(otherFieldSpecificErrorsBuilder.toString());
+                builder.create().show();
             }
 
             //Handle other errors
             for (UnspecificValidationError error : errorResult.getUnspecificValidationErrors()) {
-                //TODO handle UnspecificValidationErrors
-                LoggerFactory.getLogger(this.getClass()).error("Handle me! I'm a custom error!: " + error.getMessage() + ", " + error.getException());
+                //TODO better handling of UnspecificValidationErrors
+                throw new RuntimeException(error.getException());
 
             }
         }
