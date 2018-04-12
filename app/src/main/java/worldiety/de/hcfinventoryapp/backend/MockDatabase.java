@@ -1,17 +1,13 @@
 package worldiety.de.hcfinventoryapp.backend;
 
-import android.support.annotation.NonNull;
+import android.content.Context;
 
-import org.homunculusframework.factory.flavor.hcf.Persistent;
-import org.homunculusframework.lang.Reference;
+import org.homunculus.android.component.module.storage.Persistent;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Singleton;
 
 import worldiety.de.hcfinventoryapp.addItem.model.InventoryItem;
 
@@ -22,23 +18,22 @@ import worldiety.de.hcfinventoryapp.addItem.model.InventoryItem;
  */
 public class MockDatabase implements Database {
 
-    @Persistent(name = "pseudo-db")
-    private Reference<DamnIt> savedItems;
+    private Persistent<List<InventoryItem>> pseudoDB;
 
-
-    @PostConstruct
-    private void init() {
-        if (savedItems.get() == null) {
-            savedItems.set(initTestItems());
+    public MockDatabase(Context context) {
+        pseudoDB = new Persistent<>(context, "pseudoDB");
+        if (pseudoDB.get() == null) {
+            pseudoDB.set(initTestItems());
         }
     }
+
 
     /**
      * Creates some test items
      *
      * @return a {@link List} of {@link InventoryItem}s
      */
-    private DamnIt initTestItems() {
+    private List<InventoryItem> initTestItems() {
         List<InventoryItem> items = new ArrayList<>();
         InventoryItem item1 = new InventoryItem();
         item1.setInventoryNumber("1");
@@ -58,44 +53,34 @@ public class MockDatabase implements Database {
 
         items.add(item2);
 
-        return new DamnIt(items);
+        return items;
     }
 
     @Override
-    public DamnIt loadItems() throws SQLException {
+    public List<InventoryItem> loadItems() throws SQLException {
         try {
             //Databases have IO, which we simulate here
             Thread.sleep(500);
         } catch (InterruptedException e) {
             //because this is a simple mock, we don't do anything here
         }
-        return new DamnIt(savedItems.get());
+        return pseudoDB.get();
     }
 
     @Override
     public void saveItem(InventoryItem item) throws SQLException {
-        savedItems.get().add(item);
-        //TODO this does not seem to persist anything
-        savedItems.set(savedItems.get());
+        pseudoDB.get().add(item);
+        pseudoDB.set(pseudoDB.get());
+        try {
+            pseudoDB.save();
+        } catch (IOException e) {
+            throw new SQLException(e);
+        }
         try {
             //Databases have IO, which we simulate here
             Thread.sleep(500);
         } catch (InterruptedException e) {
             //because this is a simple mock, we don't do anything here
-        }
-    }
-
-    //TODO @Persistant does not work with generified types
-    private static class DamnIt extends ArrayList<InventoryItem> {
-        public DamnIt(int initialCapacity) {
-            super(initialCapacity);
-        }
-
-        public DamnIt() {
-        }
-
-        public DamnIt(@NonNull Collection<? extends InventoryItem> c) {
-            super(c);
         }
     }
 }

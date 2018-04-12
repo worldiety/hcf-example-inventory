@@ -17,12 +17,12 @@ public class InventoryApplication extends HomunculusApplication<InventoryApplica
 
     @ScopeElement
     Database createDatabase() {
-        Database database = new MockDatabase();
+        Database database = new MockDatabase(this);
         return database;
     }
 
     @ScopeElement
-    HomunculusValidator createValidator(){
+    HomunculusValidator createValidator() {
         return HomunculusValidator.createAndroidResourceMessagesValidator(this);
     }
 
