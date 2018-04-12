@@ -13,14 +13,15 @@ import org.homunculus.android.component.module.validator.BindingResult;
 import org.homunculus.android.component.module.validator.DefaultModelViewPopulator;
 import org.homunculus.android.component.module.validator.FieldSpecificValidationError;
 import org.homunculus.android.component.module.validator.UnspecificValidationError;
-import org.homunculusframework.factory.container.Request;
+import org.homunculusframework.factory.flavor.hcf.Bind;
 import org.homunculusframework.navigation.Navigation;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import worldiety.de.hcfinventoryapp.R;
+import worldiety.de.hcfinventoryapp.addItem.AsyncAddItemController.InvokeAddItemControllerSave;
 import worldiety.de.hcfinventoryapp.addItem.model.InventoryItem;
 
 /**
@@ -28,36 +29,32 @@ import worldiety.de.hcfinventoryapp.addItem.model.InventoryItem;
  * <p>
  * Created by aerlemann on 19.02.18.
  */
-@Named(AddItemUIS.NAME)
+@Bind
 public class AddItemUIS extends FrameLayout {
 
-    public final static String NAME = "addItem";
-    public final static String PARAMETER_VIEWMODEL = "viewModel";
-    public final static String PARAMETER_ERRORS = "errors";
 
     @Inject
-    private Activity activity;
+    Activity activity;
 
     @Inject
     Navigation navigation;
 
-    @Inject
-    @Named(PARAMETER_VIEWMODEL)
-    private InventoryItem viewModel;
+    @Bind
+    @Nullable
+    InventoryItem viewModel;
+
+    @Bind
+    BindingResult<InventoryItem> errors;
 
     @Inject
-    @Named(PARAMETER_ERRORS)
-    private BindingResult<InventoryItem> errors;
-
-    @Inject
-    private DefaultModelViewPopulator<InventoryItem> modelViewPopulator;
+    DefaultModelViewPopulator<InventoryItem> modelViewPopulator;
 
     public AddItemUIS(@NonNull Context context) {
         super(context);
     }
 
     @PostConstruct
-    private void apply() {
+    void apply() {
         //load layout and set this as content View
         activity.setContentView(this);
         View layout = LayoutInflater.from(getContext()).inflate(R.layout.uis_add_item, null);
@@ -106,7 +103,7 @@ public class AddItemUIS extends FrameLayout {
             //Fill the model with values from the View
             modelViewPopulator.populateBean(layout, viewModel);
             //Send the model to the controller
-            navigation.forward(new Request(AddItemController.NAME + AddItemController.REQUEST_SAVE).put("entity", viewModel));
+            navigation.forward(new InvokeAddItemControllerSave(viewModel));
         });
     }
 }

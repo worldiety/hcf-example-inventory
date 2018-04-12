@@ -9,17 +9,16 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import org.homunculusframework.factory.container.Request;
+import org.homunculusframework.factory.flavor.hcf.Bind;
 import org.homunculusframework.navigation.Navigation;
 
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import worldiety.de.hcfinventoryapp.R;
-import worldiety.de.hcfinventoryapp.addItem.AddItemUIS;
+import worldiety.de.hcfinventoryapp.addItem.BindAddItemUIS;
 import worldiety.de.hcfinventoryapp.addItem.model.InventoryItem;
 
 /**
@@ -27,18 +26,15 @@ import worldiety.de.hcfinventoryapp.addItem.model.InventoryItem;
  * <p>
  * Created by aerlemann on 19.02.18.
  */
-@Named(InventoryListUIS.NAME)
+@Bind
 public class InventoryListUIS extends FrameLayout {
 
-    public final static String NAME = "inventoryList";
-    public final static String PARAMETER_INVENTORY_ITEMS = "inventoryItems";
 
     @Inject
-    private Activity activity;
+    Activity activity;
 
-    @Inject
-    @Named(PARAMETER_INVENTORY_ITEMS)
-    private List<InventoryItem> itemList;
+    @Bind
+    List<InventoryItem> itemList;
 
     @Inject
     Navigation navigation;
@@ -48,7 +44,7 @@ public class InventoryListUIS extends FrameLayout {
     }
 
     @PostConstruct
-    private void apply() {
+    void apply() {
         //load layout and set this as content View
         activity.setContentView(this);
         View layout = LayoutInflater.from(getContext()).inflate(R.layout.uis_inventory_list, null);
@@ -59,6 +55,6 @@ public class InventoryListUIS extends FrameLayout {
 
         //setup action button to navigate to AddItemUIS
         FloatingActionButton addItemButton = layout.findViewById(R.id.addItemButton);
-        addItemButton.setOnClickListener(v -> navigation.forward(new Request(AddItemUIS.class)));
+        addItemButton.setOnClickListener(v -> navigation.forward(new BindAddItemUIS(null, null)));
     }
 }

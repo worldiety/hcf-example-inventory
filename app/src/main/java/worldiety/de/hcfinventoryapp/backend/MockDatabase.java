@@ -2,8 +2,6 @@ package worldiety.de.hcfinventoryapp.backend;
 
 import android.support.annotation.NonNull;
 
-import org.homunculusframework.factory.container.Container;
-import org.homunculusframework.factory.flavor.hcf.Execute;
 import org.homunculusframework.factory.flavor.hcf.Persistent;
 import org.homunculusframework.lang.Reference;
 
@@ -22,7 +20,6 @@ import worldiety.de.hcfinventoryapp.addItem.model.InventoryItem;
  * <p>
  * Created by aerlemann on 20.02.18.
  */
-@Singleton
 public class MockDatabase implements Database {
 
     @Persistent(name = "pseudo-db")
@@ -30,7 +27,6 @@ public class MockDatabase implements Database {
 
 
     @PostConstruct
-    @Execute(Container.NAME_BACKGROUND_HANDLER)
     private void init() {
         if (savedItems.get() == null) {
             savedItems.set(initTestItems());

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.homunculus.gradle'
 
 android {
     compileSdkVersion 26
@@ -25,7 +26,7 @@ android {
 
 dependencies {
     //hcf environment
-    compile 'org.homunculusframework:hcf-android-bootstrap:0.0.63'
+    compile 'org.homunculusframework:hcf-android-bootstrap:0.0.80'
 
     compile 'com.android.support:design:26.1.0'
 
@@ -36,3 +37,4 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
+

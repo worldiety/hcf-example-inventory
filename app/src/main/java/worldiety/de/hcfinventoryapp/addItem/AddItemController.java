@@ -5,7 +5,9 @@ import android.content.Context;
 import org.homunculus.android.component.module.validator.BindingResult;
 import org.homunculus.android.component.module.validator.HomunculusValidator;
 import org.homunculus.android.component.module.validator.UnspecificValidationError;
-import org.homunculusframework.navigation.ModelAndView;
+import org.homunculusframework.factory.container.Binding;
+import org.homunculusframework.factory.container.ModelAndView;
+import org.homunculusframework.factory.container.ObjectBinding;
 
 import java.sql.SQLException;
 
@@ -25,34 +27,32 @@ import worldiety.de.hcfinventoryapp.inventoryList.InventoryListUIS;
  * Created by aerlemann on 19.02.18.
  */
 @Singleton
-@Named(AddItemController.NAME)
 public class AddItemController {
-    final static String NAME = "/addItemController";
-    final static String REQUEST_SAVE = "/save";
 
     @Inject
-    private Database database;
+    public Database database;
 
     @Inject
-    private Context context;
+    public Context context;
 
     @Inject
-    private InventoryListController inventoryListController;
+    public InventoryListController inventoryListController;
+
+    @Inject
+    public HomunculusValidator validator;
 
     /**
      * Saves the given {@link InventoryItem} to the {@link Database}. Before doing that, it checks the model using
      * {@link HomunculusValidator}.
      *
      * @param entity    an {@link InventoryItem}
-     * @param validator a {@link HomunculusValidator}
-     * @return {@link ModelAndView} for going back to {@link InventoryListUIS}, if successful, else {@link ModelAndView} for going to {@link AddItemUIS} including the errors
+     * @return {@link Binding} for going back to {@link InventoryListUIS}, if successful, else {@link ModelAndView} for going to {@link AddItemUIS} including the errors
      */
-    @Named(AddItemController.REQUEST_SAVE)
-    public ModelAndView save(InventoryItem entity, HomunculusValidator validator) {
+    ObjectBinding save(InventoryItem entity) {
         BindingResult<InventoryItem> errors = validator.validate(entity);
         if (errors.hasErrors()) {
             //We already have errors. Don't do heavy database IO.
-            return new ModelAndView(AddItemUIS.NAME).put(AddItemUIS.PARAMETER_VIEWMODEL, entity).put(AddItemUIS.PARAMETER_ERRORS, errors);
+            return new BindAddItemUIS(entity,errors);
         }
 
         try {
@@ -66,9 +66,13 @@ public class AddItemController {
             //TODO implement backward directive
             return inventoryListController.show();
         } else {
-            return new ModelAndView(AddItemUIS.NAME).put(AddItemUIS.PARAMETER_VIEWMODEL, entity).put(AddItemUIS.PARAMETER_ERRORS, errors);
+            return new BindAddItemUIS(entity,errors);
         }
 
 
+    }
+
+    ObjectBinding save2(InventoryItem entity) {
+        return null;
     }
 }
