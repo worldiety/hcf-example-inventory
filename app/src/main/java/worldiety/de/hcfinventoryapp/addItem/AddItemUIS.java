@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import worldiety.de.hcfinventoryapp.R;
 import worldiety.de.hcfinventoryapp.addItem.AsyncAddItemController.InvokeAddItemControllerSave;
 import worldiety.de.hcfinventoryapp.addItem.model.InventoryItem;
+import worldiety.de.hcfinventoryapp.views.inventory.InventoryitemView;
 
 /**
  * UIS, which is responsible for adding a new item to the inventory list
@@ -57,7 +58,7 @@ public class AddItemUIS extends FrameLayout {
     void apply() {
         //load layout and set this as content View
         activity.setContentView(this);
-        View layout = LayoutInflater.from(getContext()).inflate(R.layout.uis_add_item, null);
+        InventoryitemView layout = new InventoryitemView(getContext());
         addView(layout);
 
         //Initialize model to validate the View with
@@ -98,7 +99,7 @@ public class AddItemUIS extends FrameLayout {
             }
         }
 
-        Button buttonAdd = layout.findViewById(R.id.bt_add_item);
+        Button buttonAdd = layout.getBtAddItem();
         buttonAdd.setOnClickListener(v -> {
             //Fill the model with values from the View
             modelViewPopulator.populateBean(layout, viewModel);

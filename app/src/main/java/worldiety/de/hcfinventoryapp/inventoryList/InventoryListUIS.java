@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import worldiety.de.hcfinventoryapp.R;
 import worldiety.de.hcfinventoryapp.addItem.BindAddItemUIS;
 import worldiety.de.hcfinventoryapp.addItem.model.InventoryItem;
+import worldiety.de.hcfinventoryapp.views.inventory.InventorylistView;
 
 /**
  * UIS, which is responsible for showing a list of inventorized items
@@ -47,14 +48,14 @@ public class InventoryListUIS extends FrameLayout {
     void apply() {
         //load layout and set this as content View
         activity.setContentView(this);
-        View layout = LayoutInflater.from(getContext()).inflate(R.layout.uis_inventory_list, null);
+        InventorylistView layout = new InventorylistView(getContext());
         addView(layout);
 
-        ListView inventoryList = layout.findViewById(R.id.inventoryList);
+        ListView inventoryList = layout.getInventoryList();
         inventoryList.setAdapter(new InventoryListAdapter(itemList));
 
         //setup action button to navigate to AddItemUIS
-        FloatingActionButton addItemButton = layout.findViewById(R.id.addItemButton);
+        FloatingActionButton addItemButton = layout.getAddItemButton();
         addItemButton.setOnClickListener(v -> navigation.forward(new BindAddItemUIS(null, null)));
     }
 }

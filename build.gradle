@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'org.homunculusframework:hcf-codegen:0.0.82'
+        classpath 'org.homunculusframework:hcf-codegen:0.0.83'
         
 
         // NOTE: Do not place your application dependencies here; they belong
