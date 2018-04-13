@@ -4,6 +4,8 @@ import org.hibernate.validator.constraints.EAN;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.homunculus.android.flavor.Resource;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.DecimalMin;
 
 import worldiety.de.hcfinventoryapp.R;
@@ -14,7 +16,7 @@ import worldiety.de.hcfinventoryapp.R;
  * <p>
  * Created by aerlemann on 19.02.18.
  */
-public class InventoryItem {
+public class InventoryItem implements Serializable{
 
     //Resource annotation is needed, so the validator can match this field to a View
     @Resource(R.id.ed_inventoryNumber)
